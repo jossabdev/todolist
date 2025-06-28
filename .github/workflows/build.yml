@@ -11,8 +11,9 @@ env:
     REGISTRY: ghcr.io
     IMAGEN_NAME: ${{ github.repository }}
 jobs:
-    validation:
+    validation:        
         runs-on: ubuntu-latest
+        if: github.event_name == 'pull_request'
         env:
           main_commit: ""
           head_commit: ""
@@ -105,6 +106,7 @@ jobs:
               run: echo "✅ Se finaliza correctamente el proceso de validación de la rama ${{ github.head_ref }}." 
     build:
         runs-on: ubuntu-latest
+        if: github.event_name == 'pull_request'
         needs: validation
         services:
             postgres:
@@ -149,34 +151,11 @@ jobs:
               with:
                 name: todolist
                 path: target/*jar
-    scan-code:
-        needs: build
-        runs-on: ubuntu-latest
-
-        permissions:
-            contents: read
-            security-events: write
-
-        steps:
-            - name: Checkout del código
-              uses: actions/checkout@v4
-
-            - name: Inicializar CodeQL
-              uses: github/codeql-action/init@v3
-              with:
-                languages: java
-                queries: security-and-quality
-
-            - name: Compilar el proyecto
-              run: |
-                ./mvnw clean install -DskipTests
-            
-            - name: Ejecutar análisis CodeQL
-              uses: github/codeql-action/analyze@v3
 
     publish-docker-image:
         runs-on: ubuntu-latest
-        needs: scan-code
+        if: github.event_name == 'pull_request'
+        needs: build
 
         permissions:
             contents: read
@@ -205,3 +184,26 @@ jobs:
                 context: .
                 push: true
                 tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/todolist:latest
+    scan-code:
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: read
+            security-events: write
+
+        steps:
+            - name: Checkout del código
+              uses: actions/checkout@v4
+
+            - name: Inicializar CodeQL
+              uses: github/codeql-action/init@v3
+              with:
+                languages: java
+                queries: security-and-quality
+
+            - name: Compilar el proyecto
+              run: |
+                ./mvnw clean install -DskipTests
+            
+            - name: Ejecutar análisis CodeQL
+              uses: github/codeql-action/analyze@v3
