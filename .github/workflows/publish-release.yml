@@ -12,7 +12,9 @@ jobs:
         steps:
             - name: Checkout del código
               uses: actions/checkout@v4
-
+              with:
+                fetch-depth: 0
+                
             - name: Build del component
               run: ./mvnw clean install -DskipTests
 
