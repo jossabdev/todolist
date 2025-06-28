@@ -12,7 +12,12 @@ jobs:
         steps:
             - name: Checkout del código
               uses: actions/checkout@v4
-
+              with:
+                fetch-depth: 0
+              
+            - name: Dar permisos de ejecución al wrapper
+              run: chmod +x ./mvnw
+              
             - name: Build del component
               run: ./mvnw clean install -DskipTests
 
