@@ -21,16 +21,11 @@ jobs:
             - name: Build del component
               run: ./mvnw clean install -DskipTests
 
-            - name: Crear release en Github
+            - name: Crear  y subir artefacto al release en Github
               uses: softprops/action-gh-release@v2
               with:
                 name: "Release ${{ github.ref_name }}"
                 body: "Release automático generado por Github Actions"
-              env:
-                GITHUB_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
-            - name: Subir artefacto al release
-              uses: softprops/action-gh-release@v2
-              with:
                 files: |
                     target/*jar
               env:
