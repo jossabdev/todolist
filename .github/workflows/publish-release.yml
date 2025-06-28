@@ -15,9 +15,9 @@ jobs:
               with:
                 fetch-depth: 0
               
-            - name: Dar permisos de ejecución al wrapper
+            - name: Dar permisos de ejecución al wrapper 
               run: chmod +x ./mvnw
-              
+
             - name: Build del component
               run: ./mvnw clean install -DskipTests
 
@@ -27,11 +27,11 @@ jobs:
                 name: "Release ${{ github.ref_name }}"
                 body: "Release automático generado por Github Actions"
               env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                GITHUB_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
             - name: Subir artefacto al release
               uses: softprops/action-gh-release@v2
               with:
                 files: |
                     target/*jar
               env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                GITHUB_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
