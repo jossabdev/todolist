@@ -1,0 +1,34 @@
+name: "Workflow"
+
+on:
+    workflow_dispatch:
+jobs:
+  test-matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config: [build-java17, build-java21, test-postgres, test-mysql]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        if: startsWith(matrix.config, 'build')
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.config == 'build-java17' && '17' || '21' }}
+          distribution: temurin
+
+      - name: Build app
+        if: startsWith(matrix.config, 'build')
+        run: |
+         chmod +x ./mvnw
+         ./mvnw clean install -DskipTests
+
+      - name: Test with PostgreSQL
+        if: matrix.config == 'test-postgres'
+        run: echo "Probando con PostgreSQL..."
+
+      - name: Test with MySQL
+        if: matrix.config == 'test-mysql'
+        run: echo "Probando con MySQL..."
