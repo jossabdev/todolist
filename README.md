@@ -1,2 +1,6 @@
 This is my todo list project
-![Build Status](https://github.com/jossabdev/todolist/actions/workflows/build.yml/badge.svg)
+----
+Example
+
+
+[![Build Status](https://github.com/jossabdev/todolist/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/jossabdev/todolist/actions/workflows/build.yml)
