@@ -188,10 +188,12 @@ jobs:
     scan-code:
         runs-on: ubuntu-latest
 
+        environment: development
+        
         permissions:
             contents: read
             security-events: write
-
+        
         steps:
             - name: Checkout del código
               uses: actions/checkout@v4
